@@ -2,6 +2,7 @@ from modules.object_tracking import ObjectTracker
 from modules.medrone import MEDrone, get_direction, is_drone_in_target
 from modules.manager import CaptureManager, WindowManager
 from dronekit import LocationGlobalRelative, VehicleMode
+from cvclient import CVClient
 
 import cv2
 import logging
@@ -28,6 +29,13 @@ def parse_args():
         dest='camera',
         required=True,
         help="Video file or a capturing device or an IP video stream for video capturing.",
+    )
+    parser.add_argument(
+        "-n",
+        "--network",
+        dest='host',
+        action='store_true',
+        help="Receive Frames stream from network",
     )
     parser.add_argument(
         '-f',
@@ -79,7 +87,10 @@ def main():
         )
 
     window = WindowManager("Medrone Hedef Tespiti")
-    camera = cv2.VideoCapture(args.camera if len(args.camera) > 2 else int(args.camera))
+    if args.host:
+        camera = CVClient(args.camera)
+    else:
+        camera = cv2.VideoCapture(args.camera if len(args.camera) > 2 else int(args.camera))
 
     if not camera.isOpened():
         raise CameraError("Can't Open Camera")
@@ -98,20 +109,24 @@ def main():
         drone.simple_goto(point)
         logging.info("Görüntü İşleme Modülü Çalışıyor...")
         window.createWindow()
+        objects = {}
         while window.isWindowCreated:
             with cap as frame:
                 if frame is not None:
                     frame, targets = detector.track_objects(frame)
                     if len(targets) == 1:
-                        logging.debug(f"Detected {targets[0]['class']} on {targets[0]['bbox']}")
-                        box = targets[0]['bbox']
-                        if is_drone_in_target(frame, box, 40):
-                            break
-                        else:
-                            logging.debug("{} {} {}".format(*drone.location))
-                            drone.send_ned_velocity(
-                                *get_direction(*frame.shape[:2], box)
-                            )
+                        target = targets[0]
+                        if len(objects) and (objects.get(target['id'], 0) > 90):
+                            logging.debug(f"Detected {target['class']} on {target['bbox']}")
+                            box = target['bbox']
+                            if is_drone_in_target(frame, box, 40):
+                                break
+                            else:
+                                logging.debug("{} {} {}".format(*drone.location))
+                                drone.send_ned_velocity(
+                                    *get_direction(*frame.shape[:2], box)
+                                )
+                        objects.update({target['id']: 1 + objects.get(target['id'], 0)})
                 #cap.frame = frame
             window.processEvent()
         window.destroyWindow()

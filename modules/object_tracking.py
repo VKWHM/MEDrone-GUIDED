@@ -114,6 +114,6 @@ class ObjectTracker:
             cv2.putText(frame, class_name, (int(bbox[0]), int(
                 bbox[1] - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             tracked_objects.append(
-                {'bbox': bbox.tolist(), 'class': class_name})
+                {'bbox': bbox.tolist(), 'class': class_name, 'id': track.track_id})
 
         return frame, tracked_objects
