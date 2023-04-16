@@ -2,7 +2,7 @@ from modules.object_tracking import ObjectTracker
 from modules.medrone import MEDrone, get_direction, is_drone_in_target
 from modules.manager import CaptureManager, WindowManager
 from dronekit import LocationGlobalRelative, VehicleMode
-from cvclient import CVClient
+from modules.cvclient import CVClient
 
 import cv2
 import logging
@@ -96,8 +96,8 @@ def main():
         raise CameraError("Can't Open Camera")
     cap = CaptureManager(camera, window)
 
-    detector = ObjectTracker("/home/sorabot/Desktop/AI2024-Sorabot/yolo/medrone_hedef.cfg",
-                             "/home/sorabot/Desktop/AI2024-Sorabot/yolo/medrone_hedef.weights", threshold=args.thresh
+    detector = ObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
+                             os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=args.thresh
                              )
 
     way_points = get_wp(args.file)
