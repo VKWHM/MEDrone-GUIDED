@@ -107,36 +107,14 @@ def get_distance_metres(aLocation1, aLocation2):
 
 
 def get_direction(image_height, image_width, box):
-    h, w = image_height//2, image_width//2
-    box_x, box_y, box_width, box_height = box
-    box_center_x = (box_x + box_width)//2
-    box_center_y = (box_y + box_height)//2
-    if box_center_x > w and box_center_y > h:
-        direction = (1, 1)
-    # güneydoğu
-    elif box_center_x > w and box_center_y < h:
-        direction = (-1, 1)
-    # kuzeybatı
-    elif box_center_x < w and box_center_y > h:
-        direction = (1, -1)
-    # güneybatı
-    elif box_center_x < w and box_center_y < h:
-        direction = (-1, -1)
-    # kuzey
-    elif box_center_x == w and box_center_y > h:
-        direction = (1, 0)
-    # doğu
-    elif box_center_x < w and box_center_y == h:
-        direction = (0, 1)
-    # batı
-    elif box_center_x > w and box_center_y == h:
-        direction = (0, -1)
-    # güney
-    elif box_center_x == w and box_center_y < h:
-        direction = (-1, 0)
-    else:
-        direction = (0, 0)
-    return direction
+    target_center_x, target_center_y = (box[0] + box[2])//2, (box[1] + box[3])//2
+    error_x = target_center_x - image_width / 2
+    error_y = target_center_y - image_height / 2
+    v_x = -error_y / 100
+    v_y = error_x / 100
+    v_x = max(min(v_x, 1), -1)
+    v_y = max(min(v_y, 1), -1)
+    return (v_x, v_y)
 
 
 def is_drone_in_target(img, box, distance=20):
