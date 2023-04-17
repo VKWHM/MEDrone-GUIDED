@@ -93,6 +93,9 @@ class CVClient:
     def get(self, *args, **kwargs):
         return None
 
+    def set(self, *args, **kwargs):
+        return None
+
     def send_order(self, order):
         if self._canSend:
             try:

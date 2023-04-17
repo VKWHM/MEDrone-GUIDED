@@ -160,7 +160,7 @@ def main():
                     frame, targets = detector.track_objects(frame)
                     if len(targets) == 1:
                         target = targets[0]
-                        if len(objects) and (objects.get(target['id'], 0) > 90):
+                        if len(objects) and (objects.get(target['id'], 0) > 60):
                             logging.debug(f"Detected {target['class']} on {target['bbox']}")
                             box = target['bbox']
                             if is_drone_in_target(frame, box, 40):

@@ -20,7 +20,7 @@ with warnings.catch_warnings():
 
 
 class ObjectTracker:
-    def __init__(self, yolo_cfg, yolo_weights, max_cosine_distance=0.5, nn_budget=None, model_filename='mars-small128.pb', threshold=0.6):
+    def __init__(self, yolo_cfg, yolo_weights, max_cosine_distance=0.5, nn_budget=None, model_filename='mars-small128.pb', threshold=0.5):
         self.max_cosine_distance = max_cosine_distance
         self.nn_budget = nn_budget
         self.encoder = generate_detections.create_box_encoder(model_filename)
