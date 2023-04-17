@@ -608,8 +608,9 @@ class Ui_MEDrone_siralama(object):
             eczaneListOrdered.append(hedef_list[0])
 
         # print(returnOfSP)
-        with open('wp.json', 'w') as f:
-            json.dump(eczaneListOrdered, f, indent=4)
+        _list = [ {'coordinates': wp} for wp in eczaneListOrdered ]
+        with open('src/wp.json', 'w') as f:
+            json.dump({'sort_status': 1, 'points':_list}, f, indent=4)
         app.quit()
 
     def shortest_path(self, ecz1_acil, ecz2_acil, ecz3_acil):

@@ -1,4 +1,4 @@
 __pycache__
-guided_medrone_dinamik.py
 way_points.json
-src/*
+src/*.cfg
+src/*.weights

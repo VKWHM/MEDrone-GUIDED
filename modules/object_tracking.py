@@ -31,7 +31,7 @@ class ObjectTracker:
         self.cfg = yolo_cfg
         self.weight = yolo_weights
         self.labels = ["Medrone Hedef"]
-        self.colors = ["0,0,255"]
+        self.colors = ["255,0,0"]
         self.colors = [np.array(color.split(",")).astype("int")
                        for color in self.colors]
         self.colors = np.array(self.colors)
@@ -107,7 +107,7 @@ class ObjectTracker:
             color = tuple(color.tolist())
 
             # to draw center point on frame
-            cv2.circle(frame,( frame.shape[1]//2, frame.shape[0]//2), 2, (0,0,255),1)
+            cv2.circle(frame,( frame.shape[1]//2, frame.shape[0]//2), 2, (0,255,0),3)
 
             cv2.rectangle(frame, (int(bbox[0]), int(
                 bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)

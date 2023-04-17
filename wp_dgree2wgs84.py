@@ -11,7 +11,8 @@ for point in sys.argv[2:]:
     lat, lon, alt = lat.strip(), lon.strip(), alt.strip()
     points.append(GPSLocation(lat, lon, alt).export())
 if sys.argv[1].strip() == 'json':
-    print(json.dumps(points, indent=3))
+    _list = [{'coordinates': wp} for wp in points]
+    print(json.dumps({'points': _list}, indent=3))
 else:
     for point in points:
         for coor in point:

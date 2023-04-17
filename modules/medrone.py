@@ -10,7 +10,10 @@ import re
 class MEDrone:
     def __init__(self, connection_port, logger='MEDrone'):
         self._logger = logging.getLogger(logger)
-        self.vehicle = connect(connection_port, wait_ready=False)
+        if 'dev' in connection_port:
+            self.vehicle = connect(connection_port, buad=57600, wait_ready=True)
+        else:
+            self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")
         self._logger.debug('Guided Moduna Alınmayı Bekleniyor.')
         while not self.vehicle.mode.name == "GUIDED":
@@ -120,7 +123,7 @@ class GPSLocation(LocationGlobalRelative):
         utm = pyproj.CRS('EPSG:32618')
         transformer = pyproj.Transformer.from_crs(wgs84, utm)
         easting, northing = transformer.transform(lon_dd, lat_dd)
-        super().__init__(easting, northing, args[2])
+        super().__init__(easting, northing, float(args[2]))
 
     def export(self):
         return [self.lat, self.lon, self.alt]
