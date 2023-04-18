@@ -11,7 +11,8 @@ class MEDrone:
     def __init__(self, connection_port, logger='MEDrone'):
         self._logger = logging.getLogger(logger)
         if 'dev' in connection_port:
-            self.vehicle = connect(connection_port, baud=57600, wait_ready=True)
+            self.vehicle = connect(
+                connection_port, baud=57600, wait_ready=True)
         else:
             self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")
@@ -113,7 +114,7 @@ class GPSLocation(LocationGlobalRelative):
         lon = args[1]
         print(lat)
         print(lon)
-        pattern = re.compile("(([0-9\.]+)°)?(([0-9\.]+)')?(([0-9\.]+)'')?")
+        pattern = re.compile("(([0-9\.]+)°)?(([0-9\.]+)')?(([0-9\.]+)[('')|\"])?")
         lat_result = pattern.search(lat)
         lon_result = pattern.search(lon)
         if lat_result.group() != '' and lon_result.group() != '':
