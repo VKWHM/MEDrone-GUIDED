@@ -11,7 +11,8 @@ class MEDrone:
     def __init__(self, connection_port, logger='MEDrone'):
         self._logger = logging.getLogger(logger)
         if 'dev' in connection_port:
-            self.vehicle = connect(connection_port, buad=57600, wait_ready=True)
+            self.vehicle = connect(
+                connection_port, buad=57600, wait_ready=True)
         else:
             self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")
@@ -68,7 +69,7 @@ class MEDrone:
         # send command to vehicle on 1 Hz cycle
         self.vehicle.send_mavlink(msg)
 
-    def set_servo(channel, pwm_value):
+    def set_servo(self, channel, pwm_value):
         """
         Set the PWM value for a specific channel of the servo.
 
@@ -88,19 +89,22 @@ class MEDrone:
     def simple_goto(self, targetLocation):
         currentLocation = self.vehicle.location.global_relative_frame
         targetDistance = get_distance_metres(currentLocation, targetLocation)
-        self._logger.info("Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
+        self._logger.info(
+            "Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
 
         self.vehicle.simple_goto(targetLocation)
 
         while True:
             currentLocation = self.vehicle.location.global_relative_frame
-            targetDistance = get_distance_metres(currentLocation, targetLocation)
+            targetDistance = get_distance_metres(
+                currentLocation, targetLocation)
 
             if targetDistance <= 1:
                 self._logger.info("Hedef Noktasına Ulaşıldı.")
                 break
 
-            self._logger.info("Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
+            self._logger.info(
+                "Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
             time.sleep(1)
 
 
@@ -110,13 +114,19 @@ class GPSLocation(LocationGlobalRelative):
         lon = args[1]
         pattern = re.compile("(([0-9\.]+)°)?(([0-9\.]+)')?(([0-9\.]+)'')?")
         lat_result = pattern.search(lat)
-        lat_deg = float(lat_result.group(2) if lat_result.group(2) is not None else 0)
-        lat_min = float(lat_result.group(4) if lat_result.group(4) is not None else 0)
-        lat_sec = float(lat_result.group(6) if lat_result.group(6) is not None else 0)
+        lat_deg = float(lat_result.group(
+            2) if lat_result.group(2) is not None else 0)
+        lat_min = float(lat_result.group(
+            4) if lat_result.group(4) is not None else 0)
+        lat_sec = float(lat_result.group(
+            6) if lat_result.group(6) is not None else 0)
         lon_result = pattern.search(lon)
-        lon_deg = float(lon_result.group(2) if lon_result.group(2) is not None else 0)
-        lon_min = float(lon_result.group(4) if lon_result.group(4) is not None else 0)
-        lon_sec = float(lon_result.group(6) if lon_result.group(6) is not None else 0)
+        lon_deg = float(lon_result.group(
+            2) if lon_result.group(2) is not None else 0)
+        lon_min = float(lon_result.group(
+            4) if lon_result.group(4) is not None else 0)
+        lon_sec = float(lon_result.group(
+            6) if lon_result.group(6) is not None else 0)
         lat_dd = lat_deg + (lat_min / 60) + (lat_sec / 3600)
         lon_dd = lon_deg + (lon_min / 60) + (lon_sec / 3600)
         wgs84 = pyproj.CRS('EPSG:4326')
@@ -128,6 +138,7 @@ class GPSLocation(LocationGlobalRelative):
     def export(self):
         return [self.lat, self.lon, self.alt]
 
+
 def get_distance_metres(aLocation1, aLocation2):
 
     dlat = aLocation2.lat - aLocation1.lat
@@ -136,7 +147,8 @@ def get_distance_metres(aLocation1, aLocation2):
 
 
 def get_direction(image_height, image_width, box):
-    target_center_x, target_center_y = (box[0] + box[2])//2, (box[1] + box[3])//2
+    target_center_x, target_center_y = (
+        box[0] + box[2])//2, (box[1] + box[3])//2
     error_x = target_center_x - image_width / 2
     error_y = target_center_y - image_height / 2
     v_x = -error_y / 100
