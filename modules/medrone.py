@@ -1,5 +1,6 @@
 from pymavlink import mavutil
 from dronekit import connect, VehicleMode, LocationGlobalRelative, Command
+from coordinates.converter import convert_degrees_to_decimal
 import time
 import logging
 import math
@@ -107,17 +108,15 @@ class MEDrone:
                 "Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
             time.sleep(1)
 
-
+## 32°21'21" 
 class GPSLocation(LocationGlobalRelative):
     def __init__(self, *args):
         lat = args[0]
         lon = args[1]
-        print(lat)
-        print(lon)
         pattern = re.compile("(([0-9\.]+)°)?(([0-9\.]+)')?(([0-9\.]+)[('')|\"])?")
         lat_result = pattern.search(lat)
         lon_result = pattern.search(lon)
-        if lat_result.group() != '' and lon_result.group() != '':
+        if lat_result.group(0) != '' and lon_result.group(0) != '':
             lat_deg = float(lat_result.group(
                 2) if lat_result.group(2) is not None else 0)
             lat_min = float(lat_result.group(
@@ -130,16 +129,11 @@ class GPSLocation(LocationGlobalRelative):
                 4) if lon_result.group(4) is not None else 0)
             lon_sec = float(lon_result.group(
                 6) if lon_result.group(6) is not None else 0)
-            lat_dd = lat_deg + (lat_min / 60) + (lat_sec / 3600)
-            lon_dd = lon_deg + (lon_min / 60) + (lon_sec / 3600)
-            wgs84 = pyproj.CRS('EPSG:4326')
-            utm = pyproj.CRS('EPSG:32618')
-            transformer = pyproj.Transformer.from_crs(wgs84, utm)
-            easting, northing = transformer.transform(lon_dd, lat_dd)
+            lat_dd = convert_degrees_to_decimal(lat_deg ,lat_min ,lat_sec)
+            lon_dd = convert_degrees_to_decimal(lon_deg ,lon_min ,lon_sec)
         else:
-            easting, northing = float(lat), float(lon)
-        super().__init__(easting, northing, float(args[2]))
-
+            (lat_dd, lon_dd) = float(lat), float(lon)
+        super().__init__(lat_dd, lon_dd, float(args[2]))
     def export(self):
         return [self.lat, self.lon, self.alt]
 
