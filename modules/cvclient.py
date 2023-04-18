@@ -107,6 +107,9 @@ class CVClient:
                 self._logger.error(e)
                 self._canSend = False
 
+    def set(self, *args, **kwargs):
+        pass
+
     def release(self):
         if self._isOpened:
             self._socket.close()

@@ -11,8 +11,7 @@ class MEDrone:
     def __init__(self, connection_port, logger='MEDrone'):
         self._logger = logging.getLogger(logger)
         if 'dev' in connection_port:
-            self.vehicle = connect(
-                connection_port, buad=57600, wait_ready=True)
+            self.vehicle = connect(connection_port, baud=57600, wait_ready=True)
         else:
             self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")
@@ -21,7 +20,6 @@ class MEDrone:
             time.sleep(1)
         else:
             self._logger.info('Guided Moda Alındı')
-        self.vehicle.armed = True
         while self.vehicle.is_armable is not True:
             self._logger.warning("IHA ARM edilebilir durumda değil.")
             time.sleep(2)
@@ -32,6 +30,7 @@ class MEDrone:
 
     def takeoff(self, altitude):
         self._logger.debug('Kalkış İçin Hazırlanıyor...')
+        self.vehicle.armed = True
         self._logger.debug('ARM Olunmayı Bekleniyor.')
         while not self.vehicle.armed:
             time.sleep(1)

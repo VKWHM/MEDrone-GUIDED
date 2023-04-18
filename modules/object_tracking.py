@@ -74,7 +74,7 @@ class ObjectTracker:
             if len(boxes) > 0:
                 break
 
-        indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+        indices = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, self.threshold)
 
         detections = []
         for i in indices:

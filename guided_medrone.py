@@ -20,37 +20,40 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "address",
-        default=0,
         help="Drone connection address.",
     )
-    parser.add_argument(
-        "-c",
-        "--camera",
-        dest='camera',
-        required=True,
+
+    subparsers = parser.add_subparsers(dest='source')
+
+    # create a parser for the camera option
+    camera_parser = subparsers.add_parser('camera', help='Capture video from a camera or video file')
+    camera_parser.add_argument(
+        "ID",
+        type=str,
         help="Video file or a capturing device or an IP video stream for video capturing.",
     )
-    parser.add_argument(
+    camera_parser.add_argument(
         "-n",
         "--network",
         dest='host',
         action='store_true',
         help="Receive Frames stream from network",
     )
+    camera_parser.add_argument(
+        "-t",
+        "--threshold",
+        dest="thresh",
+        default=0.5,
+        type=float,
+        help="Threshold value.",
+    )
+
     parser.add_argument(
         '-f',
         '--file',
         type=str,
         required=True,
         help='File for way points.'
-    )
-    parser.add_argument(
-        "-t",
-        "--threshold",
-        dest="thresh",
-        default=0.6,
-        type=float,
-        help="Trashold value.",
     )
     parser.add_argument(
         "-l",
@@ -60,6 +63,7 @@ def parse_args():
         choices=["critical", "error", "warning", "info", "debug"],
         help="Level for logging",
     )
+
     return parser.parse_args()
 
 
@@ -109,7 +113,7 @@ def get_wp(filename, current_location):
     with open(filename, 'r') as f:
         wp_data = json.load(f)
         if wp_data.get('sort_status', 0) == 1:
-            return [LocationGlobalRelative(*wp['coordinates']) for wp in wp_data['points']]
+            return wp_data['points']
     wps = []
     urgency_wp = [wp for wp in wp_data['points'] if wp.get('urgency', 0) == 1]
     wps.extend(sort_wp(urgency_wp, current_location))
@@ -123,7 +127,31 @@ def get_wp(filename, current_location):
     return wps
 
 
+def image_processing(cap, window, drone, detector):
+    window.createWindow()
+    objects = {}
+    while window.isWindowCreated:
+        with cap as frame:
+            if frame is not None:
+                frame, targets = detector.track_objects(frame)
+                if len(targets) == 1:
+                    target = targets[0]
+                    if len(objects) and (objects.get(target['id'], 0) > 60):
+                        logging.debug(f"Detected {target['class']} on {target['bbox']}")
+                        box = target['bbox']
+                        if is_drone_in_target(frame, box, 40):
+                            break
+                        else:
+                            logging.debug("{} {} {}".format(*drone.location))
+                            drone.send_ned_velocity(
+                                *get_direction(*frame.shape[:2], box)
+                            )
+                    objects.update({target['id']: 1 + objects.get(target['id'], 0)})
+        window.processEvent()
+    window.destroyWindow()
+
 def main():
+    ALTITUDE = 10
     args = parse_args()
     try:
         import colorlog
@@ -139,66 +167,64 @@ def main():
             datefmt="%H:%M:%S",
         )
 
-    window = WindowManager("Medrone Hedef Tespiti")
-    if args.host:
-        camera = CVClient(args.camera)
-    else:
-        camera = cv2.VideoCapture(args.camera if len(
-            args.camera) > 2 else int(args.camera))
+    if args.source is not None:
+        window = WindowManager("Medrone Hedef Tespiti")
+        if args.host:
+            camera = CVClient(args.ID)
+        else:
+            camera = cv2.VideoCapture(args.ID if len(args.ID) > 2 else int(args.ID))
 
-    if not camera.isOpened():
-        raise CameraError("Can't Open Camera")
-    cap = CaptureManager(camera, window)
+        if not camera.isOpened():
+            raise CameraError("Can't Open Camera")
+        cap = CaptureManager(camera, window)
 
-    detector = ObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
-                             os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=args.thresh
-                             )
+        detector = ObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
+                                 os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=args.thresh
+                                 )
 
     drone = MEDrone(args.address)
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
-    drone.takeoff(10)
+    try:
+        drone.takeoff(ALTITUDE)
+        for wp in way_points:
+            point = LocationGlobalRelative(*wp['coordinates'])
+            logging.info(f"{wp['coordinates']} Noktasına Gidiliyor...")
+            drone.simple_goto(point)
+            logging.debug("Drone 2 metreye kadar alçalıyor...")
+            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], 2))
+            while True:
+                current_alt = drone.location[2]
+                if current_alt <= 2:
+                    break
+            if args.source is not None:
+                logging.info("Görüntü İşleme Modülü Çalışıyor...")
+                image_processing(cap, window, drone, detector)
+            logging.info("Servo Açılmasını Bekleniyor")
+            drone.set_servo(wp['servoId'], 1100)
+            time.sleep(4)
+            logging.info("Servo Kapanıyor")
+            drone.set_servo(wp['servoId'], 2100)
+            time.sleep(4)
+            logging.debug(f"Drone {ALTITUDE} metreye kadar yükseliyor...")
+            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], ALTITUDE))
+            while True:
+                current_alt = drone.location[2]
+                if current_alt >= ALTITUDE:
+                    break
 
-    for wp in way_points:
-        point = wp['coordinates']
-        logging.info(
-            f"{list(point.__dict__.values())[:3]} Noktasına Gidiliyor...")
-        drone.simple_goto(point)
-        logging.info("Görüntü İşleme Modülü Çalışıyor...")
-        window.createWindow()
-        objects = {}
-        while window.isWindowCreated:
-            with cap as frame:
-                if frame is not None:
-                    frame, targets = detector.track_objects(frame)
-                    if len(targets) == 1:
-                        target = targets[0]
-                        if len(objects) and (objects.get(target['id'], 0) > 60):
-                            logging.debug(
-                                f"Detected {target['class']} on {target['bbox']}")
-                            box = target['bbox']
-                            if is_drone_in_target(frame, box, 40):
-                                break
-                            else:
-                                logging.debug(
-                                    "{} {} {}".format(*drone.location))
-                                drone.send_ned_velocity(
-                                    *get_direction(*frame.shape[:2], box)
-                                )
-                        objects.update(
-                            {target['id']: 1 + objects.get(target['id'], 0)})
-                # cap.frame = frame
-            window.processEvent()
-        window.destroyWindow()
-
-        logging.info("Servo Açılmasını Bekleniyor")
-        drone.set_servo(wp['servoIds'], 1100)
-        time.sleep(4)
-        logging.info("Servo Kapanıyor")
-        drone.set_servo(wp['servoIds'], 2100)
-        time.sleep(4)
-
-    logging.info("Home Noktasina İniyor... ")
-    drone.vehicle.mode = VehicleMode("RTL")
+        logging.info("Home Noktasina İniyor... ")
+        drone.vehicle.mode = VehicleMode("RTL")
+        if args.source is not None:
+            cap.close()
+    except KeyboardInterrupt:
+        drone.vehicle.mode = VehicleMode("RTL")
+        if args.source is not None:
+            cap.close()
+    except Exception as e:
+        logging.critical(e)
+        drone.vehicle.mode = VehicleMode("RTL")
+        if getattr(args, 'camera', 'FALSE') != 'FALSE':
+            cap.close()
 
 
 if __name__ == '__main__':

@@ -47,7 +47,6 @@ class CaptureManager(object):
     def channel(self):
         return self._channel
 
-
     @channel.setter
     def channel(self, value):
         if self._channel != value:
@@ -66,11 +65,6 @@ class CaptureManager(object):
                 else:
                     self._logger.warning(f"Can't Convert Bit, Frame Already 8 Bit.")
         return self._frame
-
-    @frame.setter
-    def frame(self, value):
-        if self._enteredFrame:
-            self._frame = value
 
     @property
     def isWritingImage(self):
@@ -173,6 +167,9 @@ class CaptureManager(object):
         self._logger.debug(f"Write Frame {self._frameElpased}")
         self._videoWriter.write(self._frame)
 
+    def close(self):
+        self._capture.release()
+
 
 
 class WindowManager(object):
@@ -213,8 +210,8 @@ class WindowManager(object):
 
     def processEvent(self):
         keycode = cv2.waitKey(1)
-        if self.keypressCallback is not None:
-            if keycode != -1:
-                self._logger.debug(f"Process Pressed Key {keycode}")
-                self.keypressCallback(keycode)
+        if self.keypressCallback is not None and keycode != -1:
+            self._logger.debug(f"Process Pressed Key {keycode}")
+            self.keypressCallback(keycode)
+
 
