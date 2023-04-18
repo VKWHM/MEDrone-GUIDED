@@ -163,14 +163,8 @@ class Ui_MEDrone_main_menu(object):
         self.e1_box.setTitle(_translate("MEDrone_rota_detay", "Eczane 1"))
         self.e1_box_lat.setText(_translate("MEDrone_rota_detay", "Enlem:"))
         if hedef_index[0] == 1:
-            self.e1_box_lat_val.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[0][0]:.3f}"))
-            )
-            self.e1_box_long_val.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[0][1]:.3f}"))
-            )
+            self.e1_box_lat_val.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][0]:.3f}")))
+            self.e1_box_long_val.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][1]:.3f}")))
         else:
             self.e1_box_lat_val.setText(
                 _translate("MEDrone_rota_detay", "..."))
@@ -185,73 +179,45 @@ class Ui_MEDrone_main_menu(object):
         self.label_8.setText(_translate("MEDrone_rota_detay", "Enlem:"))
         if hedef_index[0] == 2:
             self.label_9.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[0][0]:.3f}"))
-            )
-            self.label_10.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[0][1]:.3f}"))
+                _translate("MEDrone_rota_detay", str(f"{hedef_list[0][0]:.3f}")))
+            self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][1]:.3f}"))
             )
         # 2
         elif len(hedef_list) == 4:
             if hedef_index[0] == 2:
-                self.label_9.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[0][0]:.3f}"))
+                self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][0]:.3f}"))
                 )
-                self.label_10.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[0][1]:.3f}"))
+                self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][1]:.3f}"))
                 )
             elif hedef_index[1] == 2:
-                self.label_9.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][0]:.3f}"))
+                self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][0]:.3f}"))
                 )
-                self.label_10.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][1]:.3f}"))
+                self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][1]:.3f}"))
                 )
 
         elif len(hedef_list) == 3:
             if hedef_index[0] == 2:
-                self.label_9.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[0][0]:.3f}"))
+                self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][0]:.3f}"))
                 )
-                self.label_10.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[0][1]:.3f}"))
+                self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][1]:.3f}"))
                 )
             elif hedef_index[1] == 2:
-                self.label_9.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][0]:.3f}"))
+                self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][0]:.3f}"))
                 )
-                self.label_10.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][1]:.3f}"))
+                self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][1]:.3f}"))
                 )
 
         elif len(hedef_list) == 2:
             if hedef_index[1] == 2:
-                self.label_9.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][0]:.3f}"))
+                self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][0]:.3f}"))
                 )
-                self.label_10.setText(
-                    _translate("MEDrone_rota_detay", str(
-                        f"{hedef_list[1][1]:.3f}"))
+                self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][1]:.3f}"))
                 )
 
         elif len(hedef_list) == 5:
-            self.label_9.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[1][0]:.3f}"))
+            self.label_9.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][0]:.3f}"))
             )
-            self.label_10.setText(
-                _translate("MEDrone_rota_detay", str(
-                    f"{hedef_list[1][1]:.3f}"))
+            self.label_10.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][1]:.3f}"))
             )
         else:
             self.label_9.setText(_translate("MEDrone_rota_detay", "..."))
@@ -265,28 +231,22 @@ class Ui_MEDrone_main_menu(object):
         self.groupBox_3.setTitle(_translate("MEDrone_rota_detay", "Eczane 3"))
         self.label_15.setText(_translate("MEDrone_rota_detay", "Enlem:"))
         if hedef_index[0] == 3:
-            self.label_16.setText(
-                _translate("MEDrone_rota_detay", str(hedef_list[0][0]))
+            self.label_16.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][0]:.3f}"))
             )
-            self.label_17.setText(
-                _translate("MEDrone_rota_detay", str(hedef_list[0][1]))
+            self.label_17.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[0][1]:.3f}"))
             )
 
         elif len(hedef_list) == 2:
             if hedef_index[1] == 3:
-                self.label_16.setText(
-                    _translate("MEDrone_rota_detay", str(hedef_list[1][0]))
+                self.label_16.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[1][0]:.3f}"))
                 )
-                self.label_17.setText(
-                    _translate("MEDrone_rota_detay", str(hedef_list[1][1]))
+                self.label_17.setText(_translate("MEDrone_rota_detay",str(f"{hedef_list[1][1]:.3f}"))
                 )
 
         elif len(hedef_list) == 3:
-            self.label_16.setText(
-                _translate("MEDrone_rota_detay", str(hedef_list[2][0]))
+            self.label_16.setText( _translate("MEDrone_rota_detay", str(f"{hedef_list[2][0]:.3f}"))
             )
-            self.label_17.setText(
-                _translate("MEDrone_rota_detay", str(hedef_list[2][1]))
+            self.label_17.setText(_translate("MEDrone_rota_detay", str(f"{hedef_list[2][1]:.3f}"))
             )
         else:
             self.label_16.setText(_translate("MEDrone_rota_detay", "..."))
@@ -1032,8 +992,7 @@ class Ui_MEDrone(object):
 
                 hedef_list.append(GPSLocation(lat, long, alt).export())
                 hedef_index.append(i+1)
-
-            except:
+            except ValueError:
                 i += 1
         # print(hedef_list)
         if len(hedef_index) == 0:
