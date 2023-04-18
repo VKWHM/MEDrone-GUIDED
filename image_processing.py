@@ -4,6 +4,7 @@ from modules.cvclient import CVClient
 
 import argparse
 import logging
+logging.basicConfig(level=logging.INFO)
 import os
 import cv2
 
@@ -38,7 +39,7 @@ def main():
     if args.host:
         camera = CVClient(args.camera)
     else:
-        camera = cv2.VideoCapture(args.camera)
+        camera = cv2.VideoCapture(args.camera if len(args.camera) > 2 else int(args.camera))
     Cameo(camera, trashold=args.thresh).run()
 
 class Cameo(object):
@@ -87,7 +88,7 @@ class Cameo(object):
         elif keycode == 9:  # TAB
             if not self._captureManager.isWritingVideo:
                 self._captureManager.startWriteVideo(
-                    "screencast.mp4", cv2.VideoWriter_fourcc(*"mp4v")
+                    "screencast.mp4", cv2.VideoWriter_fourcc(*'mp4v')
                 )
             else:
                 self._captureManager.stopWriteVideo()

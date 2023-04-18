@@ -146,7 +146,7 @@ class CaptureManager(object):
             return
         if self._videoWriter is None:
             self._logger.debug(f"Video Writer is none. Initial It...")
-            fps = self._capture.get(cv2.CAP_PROP_FPS)
+            fps = 30
             self._logger.debug(f"Get FPS from Camera {fps}")
             if fps is None or (fps is not None and fps <= 0.0):
                 if self._frameElpased < 20:
@@ -162,7 +162,7 @@ class CaptureManager(object):
             except TypeError:
                 size = self._frame.shape[:2][::-1]
             self._videoWriter = cv2.VideoWriter(
-                self._videoFilename, self._videoEncoding, fps, size
+                self._videoFilename, self._videoEncoding, 30, size
             )
         self._logger.debug(f"Write Frame {self._frameElpased}")
         self._videoWriter.write(self._frame)
