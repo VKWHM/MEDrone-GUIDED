@@ -609,9 +609,11 @@ class Ui_MEDrone_siralama(object):
 
         # print(returnOfSP)
 
-        servoId = [9, 10, 11]
+        servoIds = []
+        for i in returnOfSP[0]:
+            servoIds.append(i+8)
 
-        finalList = zip(eczaneListOrdered, servoId)
+        finalList = zip(eczaneListOrdered, servoIds)
         _list = [{'coordinates': degisken[0], 'servoId': degisken[1]}
                  for degisken in finalList]
         with open('src/wp.json', 'w') as f:
