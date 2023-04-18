@@ -1,4 +1,5 @@
 future==0.18.3
+coordinates-converter==0.1.0
 PyQt5==5.15.9
 dronekit==2.9.2
 dronekit-sitl==3.3.0
