@@ -15,6 +15,8 @@ import time
 from pymavlink import mavutil
 import queue
 import json
+from medrone import GPSLocation
+
 
 hedef_index = []
 hedef_list = []
@@ -1008,14 +1010,12 @@ class Ui_MEDrone(object):
         ecz_list = [e1, e2, e3]
         for i in range(len(ecz_list)):
             try:
-                lat = float(ecz_list[i][0])
-                long = float(ecz_list[i][1])
-                alt = float(ecz_list[i][2])
-                if lat == 0 or long == 0 or alt == 0:
-                    pass
-                else:
-                    hedef_list.append([lat, long, alt])
-                    hedef_index.append(i + 1)
+                lat = ecz_list[i][0]
+                long = ecz_list[i][1]
+                alt = ecz_list[i][2]
+
+                hedef_list.append(GPSLocation(lat, long, alt).export())
+                hedef_index.append(i)
 
             except:
                 i += 1
