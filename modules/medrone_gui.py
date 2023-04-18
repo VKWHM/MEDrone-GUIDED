@@ -1013,13 +1013,14 @@ class Ui_MEDrone(object):
                 lat = ecz_list[i][0]
                 long = ecz_list[i][1]
                 alt = ecz_list[i][2]
-
-                hedef_list.append(GPSLocation(lat, long, alt).export())
+                location = GPSLocation(lat, long, alt)
+                print(location.export())
+                hedef_list.append(location.export())
                 hedef_index.append(i)
 
-            except:
+            except KeyboardInterrupt:
                 i += 1
-        # print(hedef_list)
+        print(hedef_list)
         if len(hedef_index) == 0:
             pass
         else:
