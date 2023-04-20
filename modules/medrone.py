@@ -4,7 +4,6 @@ from coordinates.converter import convert_degrees_to_decimal
 import time
 import logging
 import math
-import pyproj
 import re
 
 
@@ -113,7 +112,7 @@ class GPSLocation(LocationGlobalRelative):
     def __init__(self, *args):
         lat = args[0]
         lon = args[1]
-        pattern = re.compile("(([0-9\.]+)°)?(([0-9\.]+)')?(([0-9\.]+)[('')|\"])?")
+        pattern = re.compile("(([0-9\.-]+)°)?(([0-9\.-]+)')?(([0-9\.-]+)[('')|\"])?")
         lat_result = pattern.search(lat)
         lon_result = pattern.search(lon)
         if lat_result.group(0) != '' and lon_result.group(0) != '':
