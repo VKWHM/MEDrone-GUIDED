@@ -199,12 +199,18 @@ def main():
             if args.source is not None:
                 logging.info("Görüntü İşleme Modülü Çalışıyor...")
                 image_processing(cap, window, drone, detector)
-            logging.info("Servo Açılmasını Bekleniyor")
-            drone.set_servo(wp['servoId'], 1100)
-            time.sleep(4)
-            logging.info("Servo Kapanıyor")
-            drone.set_servo(wp['servoId'], 2100)
-            time.sleep(4)
+
+            if wp.get('servoId') is not None:
+                logging.info("Servo Açılmasını Bekleniyor")
+                drone.set_servo(wp['servoId'], 1100)
+                time.sleep(4)
+                logging.info("Servo Kapanıyor")
+                drone.set_servo(wp['servoId'], 2100)
+                time.sleep(4)
+            else:
+                logging.warning(f"Way Point'e ({wp['coordinates']}) ait bir servo id bulunamadı !!")
+                time.sleep(2)
+
             logging.debug(f"Drone {ALTITUDE} metreye kadar yükseliyor...")
             drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], ALTITUDE))
             while True:
