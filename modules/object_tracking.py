@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 import time
 import cv2
 import numpy as np
@@ -19,8 +20,8 @@ with warnings.catch_warnings():
     from deep_sort.tracker import Tracker
 
 
-class ObjectTracker:
-    def __init__(self, yolo_cfg, yolo_weights, max_cosine_distance=0.5, nn_budget=None, model_filename='mars-small128.pb', threshold=0.5):
+class ObjectTracker(metaclass=ABCMeta):
+    def __init__(self, max_cosine_distance=0.5, nn_budget=None, model_filename='mars-small128.pb', threshold=0.5):
         self.max_cosine_distance = max_cosine_distance
         self.nn_budget = nn_budget
         self.encoder = generate_detections.create_box_encoder(model_filename)
@@ -28,19 +29,30 @@ class ObjectTracker:
             "cosine", max_cosine_distance, nn_budget)
         self.tracker = Tracker(self.metric)
         self.object_box = None
-        self.cfg = yolo_cfg
-        self.weight = yolo_weights
         self.labels = ["Medrone Hedef"]
         self.colors = ["255,0,0"]
         self.colors = [np.array(color.split(",")).astype("int")
                        for color in self.colors]
         self.colors = np.array(self.colors)
         self.colors = np.tile(self.colors, (18, 1))
+        self.threshold = threshold
+
+    def detect_objects(self):
+        pass
+
+    @abstractmethod
+    def track_objects(self, frame):
+        pass
+
+class YoloObjectTracker(ObjectTracker):
+    def __init__(self, yolo_cfg, yolo_weights, *args, **kwargs):
+        self.cfg = yolo_cfg
+        self.weight = yolo_weights
         self.model = cv2.dnn.readNetFromDarknet(self.cfg, self.weight)
         self.layers = self.model.getLayerNames()
         self.output_layer = [self.layers[i - 1]
                              for i in self.model.getUnconnectedOutLayers()]
-        self.threshold = threshold
+        super().__init__(*args, **kwargs)
 
     def detect_objects(self, frame, detection_layers):
         frame_height, frame_width = frame.shape[:2]
@@ -117,3 +129,45 @@ class ObjectTracker:
                 {'bbox': bbox.tolist(), 'class': class_name, 'id': track.track_id})
 
         return frame, tracked_objects
+
+class HaarObjectTracker(ObjectTracker):
+    def __init__(self, classifier, *args, **kwargs):
+        self.classifier = cv2.CascadeClassifier(classifier)
+        super().__init__(*args, **kwargs)
+
+    def detect_objects(self, frame):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        objects = self.classifier.detectMultiScale(gray, self.threshold, 2)
+        detections = []
+        for obj in objects:
+            xmin, ymin, xmax, ymax = obj
+            features = self.encoder(frame, [(xmin, ymin, xmax, ymax)])
+            detection = Detection(obj, 1.0, features)
+            detections.append(detection)
+            break
+        return detections
+
+    def track_objects(self, frame):
+        detections = self.detect_objects(frame)
+        self.tracker.predict()
+        self.tracker.update(detections)
+        tracked_objects = []
+        for track in self.tracker.tracks:
+            if not track.is_confirmed() or track.time_since_update > 1:
+                continue
+            bbox = track.to_tlbr()
+            class_name = self.labels[0]
+            color = self.colors[track.track_id % 18]
+            color = tuple(color.tolist())
+
+            cv2.circle(frame,( frame.shape[1]//2, frame.shape[0]//2), 2, (0,255,0),3)
+
+            cv2.rectangle(frame, (int(bbox[0]), int(
+                bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+            cv2.putText(frame, class_name, (int(bbox[0]), int(
+                bbox[1] - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+            tracked_objects.append(
+                {'bbox': bbox.tolist(), 'class': class_name, 'id': track.track_id})
+
+        return frame, tracked_objects
+
