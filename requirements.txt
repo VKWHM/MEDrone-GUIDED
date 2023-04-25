@@ -3,7 +3,6 @@ coordinates-converter==0.1.0
 PyQt5==5.15.9
 dronekit==2.9.2
 dronekit-sitl==3.3.0
-matplotlib==3.5.1
 MAVProxy==1.8.59
 Cython==0.29.34
 numpy==1.23.5

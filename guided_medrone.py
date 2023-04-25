@@ -1,4 +1,4 @@
-from modules.object_tracking import ObjectTracker
+from modules.object_tracking import HaarObjectTracker
 from modules.medrone import MEDrone, get_direction, is_drone_in_target, get_distance_metres
 from modules.manager import CaptureManager, WindowManager
 from dronekit import LocationGlobalRelative, VehicleMode
@@ -108,6 +108,7 @@ def sort_wp(wp_list, current_location, home_location=None):
 
 def get_wp(filename, current_location):
     if not os.path.exists(filename):
+        logging.error(f'{filename} File Is Not Exists')
         raise FileNotFoundError('The Way Points File Name Not Exists')
 
     with open(filename, 'r') as f:
@@ -128,6 +129,7 @@ def get_wp(filename, current_location):
 
 
 def image_processing(cap, window, drone, detector):
+    start_time = time.time()
     window.createWindow()
     objects = {}
     while window.isWindowCreated:
@@ -139,15 +141,20 @@ def image_processing(cap, window, drone, detector):
                     if len(objects) and (objects.get(target['id'], 0) > 60):
                         logging.debug(f"Detected {target['class']} on {target['bbox']}")
                         box = target['bbox']
-                        if is_drone_in_target(frame, box, 40):
+                        if is_drone_in_target(frame, box, 50):
                             break
                         else:
                             logging.debug("{} {} {}".format(*drone.location))
                             drone.send_ned_velocity(
                                 *get_direction(*frame.shape[:2], box)
                             )
+                            start_time += 3
+        
                     objects.update({target['id']: 1 + objects.get(target['id'], 0)})
         window.processEvent()
+        if time.time() - start_time > 20:
+            logging.warning('Image Processing Timeout! Break.')
+            break
     window.destroyWindow()
 
 def main():
@@ -178,12 +185,12 @@ def main():
             raise CameraError("Can't Open Camera")
         cap = CaptureManager(camera, window)
 
-        detector = ObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
-                                 os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=args.thresh
-                                 )
+        detector = HaarObjectTracker(os.path.join(os.path.realpath('src'), 'cascade.xml'), threshold=args.thresh)
 
     drone = MEDrone(args.address)
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
+    print(way_points)
+    exit()
     try:
         drone.takeoff(ALTITUDE)
         for wp in way_points:
@@ -202,10 +209,10 @@ def main():
 
             if wp.get('servoId') is not None:
                 logging.info("Servo Açılmasını Bekleniyor")
-                drone.set_servo(wp['servoId'], 1100)
+                drone.set_servo(wp['servoId'], 900)
                 time.sleep(4)
                 logging.info("Servo Kapanıyor")
-                drone.set_servo(wp['servoId'], 2100)
+                drone.set_servo(wp['servoId'], 2000)
                 time.sleep(4)
             else:
                 logging.warning(f"Way Point'e ({wp['coordinates']}) ait bir servo id bulunamadı !!")
@@ -229,7 +236,7 @@ def main():
     except Exception as e:
         logging.critical(e)
         drone.vehicle.mode = VehicleMode("RTL")
-        if getattr(args, 'camera', 'FALSE') != 'FALSE':
+        if args.source is not None:
             cap.close()
 
 

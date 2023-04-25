@@ -33,6 +33,7 @@ class MEDrone:
         self._logger.debug('Kalkış İçin Hazırlanıyor...')
         self.vehicle.armed = True
         self._logger.debug('ARM Olunmayı Bekleniyor.')
+        self.vehicle.flush()
         while not self.vehicle.armed:
             time.sleep(1)
         else:

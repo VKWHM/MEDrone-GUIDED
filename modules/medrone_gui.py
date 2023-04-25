@@ -586,16 +586,25 @@ class Ui_MEDrone_siralama(object):
             eczaneListOrdered.append(hedef_list[0])
 
         # print(returnOfSP)
-
+        print(acil_liste)
+         
+        print(acil_olmayan_liste)
         servoIds = []
         for i in returnOfSP[0]:
             servoIds.append(i+8)
+        acil_dict = [{'coordinates': degisken[:3], 'urgency': 1}
+                 for degisken in acil_liste]
+        acilsiz_dict = [{'coordinates': degisken[:3], 'urgency': 0}
+                 for degisken in acil_olmayan_liste]
+        acil_dict.extend(acilsiz_dict)
+        finalList = zip(acil_dict, servoIds)
+        _list = []
+        for degisken in finalList:
+            degisken[0].update({'servoId':degisken[1]}) 
+            _list.append(degisken[0])
 
-        finalList = zip(eczaneListOrdered, servoIds)
-        _list = [{'coordinates': degisken[0], 'servoId': degisken[1]}
-                 for degisken in finalList]
         with open('src/wp.json', 'w') as f:
-            json.dump({'sort_status': 1, 'points': _list}, f, indent=4)
+            json.dump({'sort_status': 0, 'points': _list}, f, indent=4)
         app.quit()
 
     def shortest_path(self, ecz1_acil, ecz2_acil, ecz3_acil):

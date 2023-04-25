@@ -2,6 +2,7 @@ __pycache__
 way_points.json
 src/*.cfg
 src/*.weights
+src/*.xml
 *.mp4
 *.avi
 *.tlog*

@@ -1,5 +1,5 @@
-sudo apt-get update;
-sudo apt-get upgrade;
+sudo apt-get update -y;
+sudo apt-get upgrade -y;
 sudo apt-get install python3-matplotlib python3-serial python3-wxgtk4.0 python3-lxml python3-scipy python3-opencv ccache gawk python3-pip python3-pexpect;
 pip3 install -r requirements.txt
 pip3 install opencv-python

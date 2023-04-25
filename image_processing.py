@@ -1,4 +1,4 @@
-from modules.object_tracking import ObjectTracker
+from modules.object_tracking import YoloObjectTracker, HaarObjectTracker
 from modules.manager import CaptureManager, WindowManager
 from modules.cvclient import CVClient
 
@@ -52,9 +52,10 @@ class Cameo(object):
         )
 
         self.shouldTracking = False
-        self._track = ObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
-                             os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=trashold
-                             )
+        #self._track = YoloObjectTracker(os.path.join(os.path.realpath('src'), 'medrone_hedef.cfg'),
+        #                     os.path.join(os.path.realpath('src'), 'medrone_hedef.weights'), threshold=trashold
+        #                     )
+        self._track = HaarObjectTracker(os.path.join(os.path.realpath('src'), 'cascade.xml'), threshold=trashold)
 
 
     def run(self):
