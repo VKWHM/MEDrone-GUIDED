@@ -3,7 +3,9 @@ way_points.json
 src/*.cfg
 src/*.weights
 src/*.xml
+src/*.log
 *.mp4
+*.png
 *.avi
 *.tlog*
 *.parm

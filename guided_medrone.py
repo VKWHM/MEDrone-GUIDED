@@ -129,6 +129,7 @@ def get_wp(filename, current_location):
 
 
 def image_processing(cap, window, drone, detector):
+    counter = 60
     start_time = time.time()
     window.createWindow()
     objects = {}
@@ -149,30 +150,45 @@ def image_processing(cap, window, drone, detector):
                                 *get_direction(*frame.shape[:2], box)
                             )
                             start_time += 0.1
+                            counter -= 0.1
         
                     objects.update({target['id']: 1 + objects.get(target['id'], 0)})
         window.processEvent()
-        if time.time() - start_time > 20:
+        if time.time() - start_time > 20 or counter < 0:
             logging.warning('Image Processing Timeout! Break.')
             break
     window.destroyWindow()
 
 def main():
-    ALTITUDE = 10
+    ALTITUDE = 15
     args = parse_args()
+    _format = "[%(asctime)s.%(msecs)03d] [%(levelname)s] (%(name)s): %(message)s"
+
     try:
         import colorlog
-        colorlog.basicConfig(
-            format="[%(asctime)s.%(msecs)03d] [%(log_color)s%(levelname)s%(reset)s] (%(name)s): %(log_color)s%(message)s%(reset)s",
-            level=getattr(logging, args.log.upper()),
-            datefmt="%H:%M:%S",
-        )
+        stream_handler = colorlog.StreamHandler()
+        stream_handler.setFormatter(colorlog.ColoredFormatter("[%(asctime)s.%(msecs)03d] [%(log_color)s%(levelname)s%(reset)s] (%(name)s): %(log_color)s%(message)s%(reset)s", datefmt="%H:%M:%S"))
+        stream_handler.setLevel(getattr(logging, args.log.upper()))
     except ImportError:
-        logging.basicConfig(
-            format="[%(asctime)s.%(msecs)03d] [%(levelname)s] (%(name)s): %(message)s",
-            level=getattr(logging, args.log.upper()),
-            datefmt="%H:%M:%S",
-        )
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(logging.Formatter(_format, datefmt="%H:%M:%S"))
+        stream_handler.setLevel(getattr(logging, args.log.upper()))
+
+    file_handler = logging.FileHandler('src/MEDBox.log')
+    formatter = logging.Formatter(_format, datefmt="%H:%M:%S")
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.DEBUG)
+
+    # add the handlers to the root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(stream_handler)
+
+    # add the handlers to the other loggers
+    loggers = [logging.getLogger(logger) for logger in ['MEDrone', 'autopilot', 'CaptureManager', 'WindowManager', 'CVClient']]
+    for logger in loggers:
+        logger.setLevel(logging.DEBUG)
 
     if args.source is not None:
         window = WindowManager("Medrone Hedef Tespiti")
@@ -195,6 +211,7 @@ def main():
             point = LocationGlobalRelative(*wp['coordinates'])
             logging.info(f"{wp['coordinates']} Noktasına Gidiliyor...")
             drone.simple_goto(point)
+            time.sleep(3)
             logging.debug("Drone 2 metreye kadar alçalıyor...")
             drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], 2))
             while True:
@@ -206,12 +223,15 @@ def main():
                 image_processing(cap, window, drone, detector)
 
             if wp.get('servoId') is not None:
-                logging.info("Servo Açılmasını Bekleniyor")
-                drone.set_servo(wp['servoId'], 900)
-                time.sleep(4)
-                logging.info("Servo Kapanıyor")
-                drone.set_servo(wp['servoId'], 2000)
-                time.sleep(4)
+                try:
+                    logging.info("Servo Açılmasını Bekleniyor")
+                    drone.set_servo(wp['servoId'], 900)
+                    time.sleep(4)
+                    logging.info("Servo Kapanıyor")
+                    drone.set_servo(wp['servoId'], 2000)
+                    time.sleep(4)
+                except Exception as e:
+                    logging.error(f"Servo Error: {e}")
             else:
                 logging.warning(f"Way Point'e ({wp['coordinates']}) ait bir servo id bulunamadı !!")
                 time.sleep(2)
