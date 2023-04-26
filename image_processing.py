@@ -4,7 +4,6 @@ from modules.cvclient import CVClient
 
 import argparse
 import logging
-logging.basicConfig(level=logging.INFO)
 import os
 import cv2
 

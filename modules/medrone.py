@@ -34,8 +34,11 @@ class MEDrone:
         self.vehicle.armed = True
         self._logger.debug('ARM Olunmayı Bekleniyor.')
         self.vehicle.flush()
+        start_time = time.time()
         while not self.vehicle.armed:
             time.sleep(1)
+            if time.time() - start_time > 3:
+                break
         else:
             self._logger.info("ARM olundu")
 
@@ -71,21 +74,16 @@ class MEDrone:
         self.vehicle.send_mavlink(msg)
 
     def set_servo(self, channel, pwm_value):
-        """
-        Set the PWM value for a specific channel of the servo.
-
-        :param channel: The channel of the servo to control.
-        :param pwm_value: The PWM value to set for the servo.
-        """
-        self._logger.debug("Servolar Çalıştırılıyor...")
-        msg = self.vehicle.message_factory.command_long_encode(
-            0, 0,  # target system, target component
-            mavutil.mavlink.MAV_CMD_DO_SET_SERVO,  # command
-            0,  # confirmation
-            channel,  # servo number
-            pwm_value,  # servo PWM value
-            0, 0, 0, 0, 0)  # unused parameters
-        self.vehicle.send_mavlink(msg)
+        self.vehicle.channels.overrides[str(channel)] = pwm_value
+        #self._logger.debug("Servolar Çalıştırılıyor...")
+        #msg = self.vehicle.message_factory.command_long_encode(
+        #    0, 0,  # target system, target component
+        #    mavutil.mavlink.MAV_CMD_DO_SET_SERVO,  # command
+        #    0,  # confirmation
+        #    channel,  # servo number
+        #    pwm_value,  # servo PWM value
+        #    0, 0, 0, 0, 0)  # unused parameters
+        #self.vehicle.send_mavlink(msg)
 
     def simple_goto(self, targetLocation):
         currentLocation = self.vehicle.location.global_relative_frame
@@ -154,7 +152,7 @@ def get_direction(image_height, image_width, box):
     v_y = error_x / 100
     v_x = max(min(v_x, 1), -1)
     v_y = max(min(v_y, 1), -1)
-    return (v_x, v_y)
+    return (v_x//2, v_y//2)
 
 
 def is_drone_in_target(img, box, distance=20):

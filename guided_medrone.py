@@ -124,7 +124,7 @@ def get_wp(filename, current_location):
             *wps[-1]['coordinates']), current_location))
     else:
         wps.extend(sort_wp(normal_wp, current_location))
-
+    logging.info(f"En kısa rota: {[wp['coordinates'] for wp in wps]}")
     return wps
 
 
@@ -148,7 +148,7 @@ def image_processing(cap, window, drone, detector):
                             drone.send_ned_velocity(
                                 *get_direction(*frame.shape[:2], box)
                             )
-                            start_time += 3
+                            start_time += 0.1
         
                     objects.update({target['id']: 1 + objects.get(target['id'], 0)})
         window.processEvent()
@@ -189,8 +189,6 @@ def main():
 
     drone = MEDrone(args.address)
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
-    print(way_points)
-    exit()
     try:
         drone.takeoff(ALTITUDE)
         for wp in way_points:

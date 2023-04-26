@@ -589,9 +589,7 @@ class Ui_MEDrone_siralama(object):
         print(acil_liste)
          
         print(acil_olmayan_liste)
-        servoIds = []
-        for i in returnOfSP[0]:
-            servoIds.append(i+8)
+        servoIds = [7,8,6]
         acil_dict = [{'coordinates': degisken[:3], 'urgency': 1}
                  for degisken in acil_liste]
         acilsiz_dict = [{'coordinates': degisken[:3], 'urgency': 0}

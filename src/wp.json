@@ -1,5 +1,5 @@
 {
-    "sort_status": 1,
+    "sort_status": 0,
     "points": [
         {
             "coordinates": [
@@ -7,23 +7,23 @@
                 149.16619627,
                 12.0
             ],
-            "servoId": 9
+            "servoId": 7
         },
         {
             "coordinates": [
                 -35.36083991,
-                149.16513615,
+                149.16613615,
                 13.0
             ],
-            "servoId": 10
+            "servoId": 8
         },
         {
             "coordinates": [
                 -35.36159903,
-                149.16389502,
+                149.16689502,
                 15.0
             ],
-            "servoId": 11
+            "servoId": 6
         }
     ]
 }
