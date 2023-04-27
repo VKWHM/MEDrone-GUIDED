@@ -388,6 +388,9 @@ class Ui_MEDrone_siralama(object):
         konumlar = {}
         mesafeler = {}
         acl_olm_say_sira_index = []
+        servoIds = [7,8,6]
+        for i in range(3):
+            hedef_list[i].append(servoIds[i])
         for i in range(len(hedef_list)):
             konumlar["home"] = self.home
             konumlar[str(i + 1)] = LocationGlobalRelative(
@@ -585,21 +588,13 @@ class Ui_MEDrone_siralama(object):
             eczaneListOrdered.append(hedef_list[1])
             eczaneListOrdered.append(hedef_list[0])
 
-        # print(returnOfSP)
-        print(acil_liste)
-         
-        print(acil_olmayan_liste)
-        servoIds = [7,8,6]
-        acil_dict = [{'coordinates': degisken[:3], 'urgency': 1}
-                 for degisken in acil_liste]
-        acilsiz_dict = [{'coordinates': degisken[:3], 'urgency': 0}
-                 for degisken in acil_olmayan_liste]
-        acil_dict.extend(acilsiz_dict)
-        finalList = zip(acil_dict, servoIds)
+        servoIds = [hedef_list[i-1][3] for i in returnOfSP[0]]
         _list = []
-        for degisken in finalList:
-            degisken[0].update({'servoId':degisken[1]}) 
-            _list.append(degisken[0])
+        for hedef in hedef_list:
+            if hedef[:3] in [acil_hedef[:3] for acil_hedef in acil_liste]:
+                _list.append({'coordinates': hedef[:3], 'servoId':hedef[3], 'urgency':1})
+            else:
+                _list.append({'coordinates': hedef[:3], 'servoId':hedef[3], 'urgency':0})
 
         with open('src/wp.json', 'w') as f:
             json.dump({'sort_status': 0, 'points': _list}, f, indent=4)
