@@ -1,10 +1,14 @@
 from pymavlink import mavutil
 from dronekit import connect, VehicleMode, LocationGlobalRelative, Command
-from coordinates.converter import convert_degrees_to_decimal
 import time
+import warnings
 import logging
 import math
 import re
+import threading
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=FutureWarning)
+    from coordinates.converter import convert_degrees_to_decimal
 
 
 class MEDrone:
@@ -12,7 +16,7 @@ class MEDrone:
         self._logger = logging.getLogger(logger)
         if 'dev' in connection_port:
             self.vehicle = connect(
-                connection_port, baud=57600, wait_ready=True)
+                connection_port, baud=115200, wait_ready=True)
         else:
             self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")
@@ -24,6 +28,7 @@ class MEDrone:
         while self.vehicle.is_armable is not True:
             self._logger.warning("IHA ARM edilebilir durumda değil.")
             time.sleep(2)
+        threading.Thread(target=self.instant_status, daemon=True).start()
 
     @property
     def location(self):
@@ -53,7 +58,7 @@ class MEDrone:
                 break
             time.sleep(1)
 
-        time.sleep(5)
+        time.sleep(3)
 
     def send_ned_velocity(self, velocity_x, velocity_y):
         """
@@ -108,6 +113,30 @@ class MEDrone:
                 "Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
             time.sleep(1)
         time.sleep(3)
+
+    def instant_status(self):
+        while True:
+            self._logger.debug(" Global Location: %s" % self.vehicle.location.global_frame)
+            self._logger.debug(" Global Location (relative altitude): %s" % self.vehicle.location.global_relative_frame)
+            self._logger.debug(" Local Location: %s" % self.vehicle.location.local_frame)
+            self._logger.debug(" Attitude: %s" % self.vehicle.attitude)
+            self._logger.debug(" Velocity: %s" % self.vehicle.velocity)
+            self._logger.debug(" GPS: %s" % self.vehicle.gps_0)
+            self._logger.debug(" Gimbal status: %s" % self.vehicle.gimbal)
+            self._logger.debug(" Battery: %s" % self.vehicle.battery)
+            self._logger.debug(" EKF OK?: %s" % self.vehicle.ekf_ok)
+            self._logger.debug(" Last Heartbeat: %s" % self.vehicle.last_heartbeat)
+            self._logger.debug(" Rangefinder: %s" % self.vehicle.rangefinder)
+            self._logger.debug(" Rangefinder distance: %s" % self.vehicle.rangefinder.distance)
+            self._logger.debug(" Rangefinder voltage: %s" % self.vehicle.rangefinder.voltage)
+            self._logger.debug(" Heading: %s" % self.vehicle.heading)
+            self._logger.debug(" Is Armable?: %s" % self.vehicle.is_armable)
+            self._logger.debug(" System status: %s" % self.vehicle.system_status.state)
+            self._logger.debug(" Groundspeed: %s" % self.vehicle.groundspeed)    # settable
+            self._logger.debug(" Airspeed: %s" % self.vehicle.airspeed)    # settable
+            self._logger.debug(" Mode: %s" % self.vehicle.mode.name)    # settable
+            self._logger.debug(" Armed: %s" % self.vehicle.armed)    # settable
+            time.sleep(10)
 
 ## 32°21'21" 
 class GPSLocation(LocationGlobalRelative):

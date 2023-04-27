@@ -5,6 +5,8 @@ from dronekit import LocationGlobalRelative, VehicleMode
 from modules.cvclient import CVClient
 
 import cv2
+import threading
+import queue
 import logging
 import json
 import argparse
@@ -25,7 +27,6 @@ def parse_args():
 
     subparsers = parser.add_subparsers(dest='source')
 
-    # create a parser for the camera option
     camera_parser = subparsers.add_parser('camera', help='Capture video from a camera or video file')
     camera_parser.add_argument(
         "ID",
@@ -129,10 +130,20 @@ def get_wp(filename, current_location):
 
 
 def image_processing(cap, window, drone, detector):
-    counter = 60
+    counter = 90
     start_time = time.time()
     window.createWindow()
     objects = {}
+    send_ordering_status = True
+    _queue = queue.Queue()
+
+    def send_orders(q):
+        while send_ordering_status:
+            drone.send_ned_velocity(*q.get())
+            time.sleep(0.1)
+
+    thread = threading.Thread(target=send_orders, args=(_queue,), daemon=True)
+    thread.start()
     while window.isWindowCreated:
         with cap as frame:
             if frame is not None:
@@ -146,9 +157,10 @@ def image_processing(cap, window, drone, detector):
                             break
                         else:
                             logging.debug("{} {} {}".format(*drone.location))
-                            drone.send_ned_velocity(
-                                *get_direction(*frame.shape[:2], box)
-                            )
+                            if _queue.empty():
+                                _queue.put(
+                                    get_direction(*frame.shape[:2], box)
+                                )
                             start_time += 0.1
                             counter -= 0.1
         
@@ -158,9 +170,13 @@ def image_processing(cap, window, drone, detector):
             logging.warning('Image Processing Timeout! Break.')
             break
     window.destroyWindow()
+    send_ordering_status = False
+    thread.join()
 
 def main():
-    ALTITUDE = 5
+    RISE_ALTITUDE = 5
+    DESCEND_ALTITUDE = 3
+
     args = parse_args()
     _format = "[%(asctime)s.%(msecs)03d] [%(levelname)s] (%(name)s): %(message)s"
 
@@ -204,18 +220,16 @@ def main():
     drone = MEDrone(args.address)
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
     try:
-        drone.takeoff(ALTITUDE)
-        time.sleep(5)
+        drone.takeoff(RISE_ALTITUDE)
         for wp in way_points:
             point = LocationGlobalRelative(*wp['coordinates'])
             logging.info(f"{wp['coordinates']} Noktasına Gidiliyor...")
             drone.simple_goto(point)
-            time.sleep(3)
-            logging.debug("Drone 2 metreye kadar alçalıyor...")
-            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], 2))
+            logging.debug(f"Drone {DESCEND_ALTITUDE} metreye kadar alçalıyor...")
+            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], DESCEND_ALTITUDE))
             while True:
                 current_alt = drone.location[2]
-                if current_alt <= 2:
+                if current_alt <= DESCEND_ALTITUDE:
                     break
             if args.source is not None:
                 logging.info("Görüntü İşleme Modülü Çalışıyor...")
@@ -235,11 +249,11 @@ def main():
                 logging.warning(f"Way Point'e ({wp['coordinates']}) ait bir servo id bulunamadı !!")
                 time.sleep(2)
 
-            logging.debug(f"Drone {ALTITUDE} metreye kadar yükseliyor...")
-            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], ALTITUDE))
+            logging.debug(f"Drone {RISE_ALTITUDE} metreye kadar yükseliyor...")
+            drone.vehicle.simple_goto(LocationGlobalRelative(*wp['coordinates'][:2], RISE_ALTITUDE))
             while True:
                 current_alt = drone.location[2]
-                if current_alt >= ALTITUDE:
+                if current_alt >= RISE_ALTITUDE:
                     break
 
             time.sleep(3)
