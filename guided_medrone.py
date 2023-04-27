@@ -160,7 +160,7 @@ def image_processing(cap, window, drone, detector):
     window.destroyWindow()
 
 def main():
-    ALTITUDE = 15
+    ALTITUDE = 5
     args = parse_args()
     _format = "[%(asctime)s.%(msecs)03d] [%(levelname)s] (%(name)s): %(message)s"
 
@@ -174,18 +174,16 @@ def main():
         stream_handler.setFormatter(logging.Formatter(_format, datefmt="%H:%M:%S"))
         stream_handler.setLevel(getattr(logging, args.log.upper()))
 
-    file_handler = logging.FileHandler('src/MEDBox.log')
+    file_handler = logging.FileHandler('src/MEDBox.log', 'w')
     formatter = logging.Formatter(_format, datefmt="%H:%M:%S")
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG)
 
-    # add the handlers to the root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
     root_logger.addHandler(file_handler)
     root_logger.addHandler(stream_handler)
 
-    # add the handlers to the other loggers
     loggers = [logging.getLogger(logger) for logger in ['MEDrone', 'autopilot', 'CaptureManager', 'WindowManager', 'CVClient']]
     for logger in loggers:
         logger.setLevel(logging.DEBUG)
@@ -207,6 +205,7 @@ def main():
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
     try:
         drone.takeoff(ALTITUDE)
+        time.sleep(5)
         for wp in way_points:
             point = LocationGlobalRelative(*wp['coordinates'])
             logging.info(f"{wp['coordinates']} Noktasına Gidiliyor...")
@@ -243,11 +242,14 @@ def main():
                 if current_alt >= ALTITUDE:
                     break
 
+            time.sleep(3)
+
         logging.info("Home Noktasina İniyor... ")
         drone.vehicle.mode = VehicleMode("RTL")
         if args.source is not None:
             cap.close()
     except KeyboardInterrupt:
+        logging.debug("CTRL-C Detected. Mode RTL...")
         drone.vehicle.mode = VehicleMode("RTL")
         if args.source is not None:
             cap.close()

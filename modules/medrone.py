@@ -53,6 +53,8 @@ class MEDrone:
                 break
             time.sleep(1)
 
+        time.sleep(5)
+
     def send_ned_velocity(self, velocity_x, velocity_y):
         """
         Move vehicle in direction based on specified velocity vectors.
@@ -105,6 +107,7 @@ class MEDrone:
             self._logger.info(
                 "Hedef Noktasına Olan Uzaklık: {:.2f}m".format(targetDistance))
             time.sleep(1)
+        time.sleep(3)
 
 ## 32°21'21" 
 class GPSLocation(LocationGlobalRelative):
