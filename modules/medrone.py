@@ -16,7 +16,7 @@ class MEDrone:
         self._logger = logging.getLogger(logger)
         if 'dev' in connection_port:
             self.vehicle = connect(
-                connection_port, baud=115200, wait_ready=True)
+                connection_port, baud=57600, wait_ready=True)
         else:
             self.vehicle = connect(connection_port, wait_ready=False)
         self.vehicle.mode = VehicleMode("GUIDED")

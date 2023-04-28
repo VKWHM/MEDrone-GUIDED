@@ -130,7 +130,7 @@ def get_wp(filename, current_location):
 
 
 def image_processing(cap, window, drone, detector):
-    counter = 90
+    counter = 60
     start_time = time.time()
     window.createWindow()
     objects = {}
@@ -150,7 +150,7 @@ def image_processing(cap, window, drone, detector):
                 frame, targets = detector.track_objects(frame)
                 if len(targets) == 1:
                     target = targets[0]
-                    if len(objects) and (objects.get(target['id'], 0) > 60):
+                    if len(objects) and (objects.get(target['id'], 0) > 40):
                         logging.debug(f"Detected {target['class']} on {target['bbox']}")
                         box = target['bbox']
                         if is_drone_in_target(frame, box, 50):
@@ -166,7 +166,7 @@ def image_processing(cap, window, drone, detector):
         
                     objects.update({target['id']: 1 + objects.get(target['id'], 0)})
         window.processEvent()
-        if time.time() - start_time > 20 or counter < 0:
+        if time.time() - start_time > 13 or counter < 0:
             logging.warning('Image Processing Timeout! Break.')
             break
     window.destroyWindow()
@@ -174,8 +174,8 @@ def image_processing(cap, window, drone, detector):
     thread.join()
 
 def main():
-    RISE_ALTITUDE = 5
-    DESCEND_ALTITUDE = 3
+    RISE_ALTITUDE = 10
+    DESCEND_ALTITUDE = 2
 
     args = parse_args()
     _format = "[%(asctime)s.%(msecs)03d] [%(levelname)s] (%(name)s): %(message)s"
