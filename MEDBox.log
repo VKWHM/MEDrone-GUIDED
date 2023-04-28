@@ -1,0 +1,152 @@
+[08:20:25.687] [DEBUG] (WindowManager): Initial Class WindowManager
+[08:20:25.687] [DEBUG] (CVClient): Initial Class CVClient
+[08:20:25.691] [INFO] (CVClient): Connected To 192.168.0.10:9999
+[08:20:25.691] [DEBUG] (CaptureManager): Initial Class CaptureManager
+[08:20:25.925] [DEBUG] (dronekit.mavlink): mav recv error: invalid MAVLink prefix '0'
+[08:20:27.281] [INFO] (autopilot): ArduCopter V4.3.6 (0c5e999c)
+[08:20:27.281] [INFO] (autopilot): ChibiOS: 66e5de0d
+[08:20:27.366] [INFO] (autopilot): CubeOrange 00250036 31315113 37323839
+[08:20:27.366] [INFO] (autopilot): RCOut: PWM:1-14
+[08:20:27.366] [INFO] (autopilot): IMU0: fast sampling enabled 8.0kHz/2.0kHz
+[08:20:27.366] [INFO] (autopilot): IMU1: fast sampling enabled 9.0kHz/2.3kHz
+[08:20:27.367] [INFO] (autopilot): IMU2: fast sampling enabled 9.0kHz/2.3kHz
+[08:20:27.367] [INFO] (autopilot): Frame: QUAD/X
+[08:20:28.416] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:29.418] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:30.420] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:31.422] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:32.423] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:33.425] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:34.427] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:35.429] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:36.431] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:37.433] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:38.435] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:39.436] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:40.438] [DEBUG] (dronekit): Still waiting for data from vehicle: parameters
+[08:20:41.440] [DEBUG] (dronekit): Still waiting for data from vehicle: 
+[08:20:41.440] [DEBUG] (MEDrone): Guided Moduna Alınmayı Bekleniyor.
+[08:20:51.450] [INFO] (MEDrone): Guided Moda Alındı
+[08:20:51.450] [DEBUG] (MEDrone):  Global Location: LocationGlobal:lat=40.2305579,lon=29.0091902,alt=101.62
+[08:20:51.450] [DEBUG] (MEDrone):  Global Location (relative altitude): LocationGlobalRelative:lat=40.2305579,lon=29.0091902,alt=-0.368
+[08:20:51.450] [DEBUG] (MEDrone):  Local Location: LocationLocal:north=-1.0178133249282837,east=3.3905394077301025,down=-5.851070404052734
+[08:20:51.450] [DEBUG] (MEDrone):  Attitude: Attitude:pitch=-0.024675434455275536,yaw=-0.20350413024425507,roll=0.01644887402653694
+[08:20:51.450] [DEBUG] (MEDrone):  Velocity: [0.0, 0.0, 0.0]
+[08:20:51.450] [DEBUG] (MEDrone):  GPS: GPSInfo:fix=3,num_sat=16
+[08:20:51.450] [DEBUG] (MEDrone):  Gimbal status: Gimbal: pitch=None, roll=None, yaw=None
+[08:20:51.450] [DEBUG] (MEDrone):  Battery: Battery:voltage=23.316,current=0.0,level=73
+[08:20:51.450] [DEBUG] (MEDrone):  EKF OK?: True
+[08:20:51.450] [DEBUG] (MEDrone):  Last Heartbeat: 0.4883843259999594
+[08:20:51.450] [DEBUG] (MEDrone):  Rangefinder: Rangefinder: distance=None, voltage=None
+[08:20:51.450] [DEBUG] (MEDrone):  Rangefinder distance: None
+[08:20:51.451] [DEBUG] (MEDrone):  Rangefinder voltage: None
+[08:20:51.451] [DEBUG] (MEDrone):  Heading: 348
+[08:20:51.451] [DEBUG] (MEDrone):  Is Armable?: True
+[08:20:51.451] [DEBUG] (MEDrone):  System status: STANDBY
+[08:20:51.451] [DEBUG] (MEDrone):  Groundspeed: 0.007073030341416597
+[08:20:51.451] [DEBUG] (MEDrone):  Airspeed: 0.03080584481358528
+[08:20:51.451] [DEBUG] (MEDrone):  Mode: GUIDED
+[08:20:51.451] [DEBUG] (MEDrone):  Armed: False
+[08:20:51.451] [INFO] (root): En kısa rota: [[40.2306008, 29.008979, 13.0], [40.2304767, 29.0089548, 12.0], [40.2303993, 29.0091093, 11.0]]
+[08:20:51.451] [DEBUG] (MEDrone): Kalkış İçin Hazırlanıyor...
+[08:20:51.451] [DEBUG] (MEDrone): ARM Olunmayı Bekleniyor.
+[08:20:54.455] [INFO] (MEDrone): Kalkış yapılıyor...
+[08:20:54.455] [DEBUG] (MEDrone): Anlık İrtifa: -0.03m
+[08:20:55.456] [DEBUG] (MEDrone): Anlık İrtifa: -0.05m
+[08:20:56.457] [DEBUG] (MEDrone): Anlık İrtifa: -0.04m
+[08:20:57.458] [DEBUG] (MEDrone): Anlık İrtifa: 0.64m
+[08:20:58.459] [DEBUG] (MEDrone): Anlık İrtifa: 2.43m
+[08:20:58.720] [INFO] (autopilot): EKF3 IMU2 MAG0 in-flight yaw alignment complete
+[08:20:58.720] [INFO] (autopilot): EKF3 IMU0 MAG0 in-flight yaw alignment complete
+[08:20:58.735] [INFO] (autopilot): EKF3 IMU1 MAG0 in-flight yaw alignment complete
+[08:20:59.460] [DEBUG] (MEDrone): Anlık İrtifa: 4.93m
+[08:21:00.461] [DEBUG] (MEDrone): Anlık İrtifa: 6.94m
+[08:21:01.458] [DEBUG] (MEDrone):  Global Location: LocationGlobal:lat=40.2305595,lon=29.0091909,alt=109.95
+[08:21:01.458] [DEBUG] (MEDrone):  Global Location (relative altitude): LocationGlobalRelative:lat=40.2305595,lon=29.0091909,alt=8.332
+[08:21:01.458] [DEBUG] (MEDrone):  Local Location: LocationLocal:north=-0.8529184460639954,east=3.4342739582061768,down=-13.868768692016602
+[08:21:01.458] [DEBUG] (MEDrone):  Attitude: Attitude:pitch=-0.04154942184686661,yaw=1.9770883321762085,roll=0.017417289316654205
+[08:21:01.458] [DEBUG] (MEDrone):  Velocity: [-0.07, 0.02, -1.47]
+[08:21:01.458] [DEBUG] (MEDrone):  GPS: GPSInfo:fix=3,num_sat=16
+[08:21:01.458] [DEBUG] (MEDrone):  Gimbal status: Gimbal: pitch=None, roll=None, yaw=None
+[08:21:01.458] [DEBUG] (MEDrone):  Battery: Battery:voltage=22.096,current=30.39,level=71
+[08:21:01.458] [DEBUG] (MEDrone):  EKF OK?: True
+[08:21:01.458] [DEBUG] (MEDrone):  Last Heartbeat: 0.48701537300030395
+[08:21:01.458] [DEBUG] (MEDrone):  Rangefinder: Rangefinder: distance=None, voltage=None
+[08:21:01.458] [DEBUG] (MEDrone):  Rangefinder distance: None
+[08:21:01.458] [DEBUG] (MEDrone):  Rangefinder voltage: None
+[08:21:01.458] [DEBUG] (MEDrone):  Heading: 113
+[08:21:01.458] [DEBUG] (MEDrone):  Is Armable?: True
+[08:21:01.458] [DEBUG] (MEDrone):  System status: ACTIVE
+[08:21:01.458] [DEBUG] (MEDrone):  Groundspeed: 0.0760858878493309
+[08:21:01.458] [DEBUG] (MEDrone):  Airspeed: 0.14756694436073303
+[08:21:01.458] [DEBUG] (MEDrone):  Mode: GUIDED
+[08:21:01.459] [DEBUG] (MEDrone):  Armed: False
+[08:21:01.463] [DEBUG] (MEDrone): Anlık İrtifa: 8.33m
+[08:21:02.464] [DEBUG] (MEDrone): Anlık İrtifa: 9.21m
+[08:21:03.466] [DEBUG] (MEDrone): Anlık İrtifa: 9.89m
+[08:21:03.466] [INFO] (MEDrone): Hedef irtifaya ulaşıldı
+[08:21:09.470] [INFO] (root): [40.2306008, 29.008979, 13.0] Noktasına Gidiliyor...
+[08:21:09.470] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.94m
+[08:21:09.470] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.94m
+[08:21:10.471] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 24.00m
+[08:21:11.469] [DEBUG] (MEDrone):  Global Location: LocationGlobal:lat=40.2305587,lon=29.0091903,alt=111.55
+[08:21:11.469] [DEBUG] (MEDrone):  Global Location (relative altitude): LocationGlobalRelative:lat=40.2305587,lon=29.0091903,alt=9.934
+[08:21:11.469] [DEBUG] (MEDrone):  Local Location: LocationLocal:north=-0.9263443946838379,east=3.3996872901916504,down=-15.77763843536377
+[08:21:11.469] [DEBUG] (MEDrone):  Attitude: Attitude:pitch=-0.07635651528835297,yaw=1.7735971212387085,roll=0.033307865262031555
+[08:21:11.469] [DEBUG] (MEDrone):  Velocity: [-0.01, -0.07, -0.06]
+[08:21:11.469] [DEBUG] (MEDrone):  GPS: GPSInfo:fix=3,num_sat=16
+[08:21:11.469] [DEBUG] (MEDrone):  Gimbal status: Gimbal: pitch=None, roll=None, yaw=None
+[08:21:11.469] [DEBUG] (MEDrone):  Battery: Battery:voltage=21.681,current=30.24,level=69
+[08:21:11.469] [DEBUG] (MEDrone):  EKF OK?: True
+[08:21:11.469] [DEBUG] (MEDrone):  Last Heartbeat: 0.4397025949997442
+[08:21:11.469] [DEBUG] (MEDrone):  Rangefinder: Rangefinder: distance=None, voltage=None
+[08:21:11.469] [DEBUG] (MEDrone):  Rangefinder distance: None
+[08:21:11.469] [DEBUG] (MEDrone):  Rangefinder voltage: None
+[08:21:11.470] [DEBUG] (MEDrone):  Heading: 101
+[08:21:11.470] [DEBUG] (MEDrone):  Is Armable?: True
+[08:21:11.470] [DEBUG] (MEDrone):  System status: ACTIVE
+[08:21:11.470] [DEBUG] (MEDrone):  Groundspeed: 0.07720588147640228
+[08:21:11.470] [DEBUG] (MEDrone):  Airspeed: 0.07060453295707703
+[08:21:11.470] [DEBUG] (MEDrone):  Mode: GUIDED
+[08:21:11.470] [DEBUG] (MEDrone):  Armed: False
+[08:21:11.472] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.98m
+[08:21:12.474] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.99m
+[08:21:13.475] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 24.02m
+[08:21:14.476] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 24.03m
+[08:21:15.477] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 24.09m
+[08:21:16.478] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 24.06m
+[08:21:17.480] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.93m
+[08:21:18.464] [INFO] (autopilot): Mission Planner 1.3.80
+[08:21:18.464] [INFO] (autopilot): Mission Planner 1.3.80
+[08:21:18.464] [INFO] (autopilot): Mission Planner 1.3.80
+[08:21:18.481] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.90m
+[08:21:19.482] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.95m
+[08:21:20.349] [DEBUG] (dronekit.mavlink): mav recv error: invalid MAVLink prefix '0'
+[08:21:20.483] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.93m
+[08:21:21.480] [DEBUG] (MEDrone):  Global Location: LocationGlobal:lat=40.230559,lon=29.0091893,alt=111.61
+[08:21:21.480] [DEBUG] (MEDrone):  Global Location (relative altitude): LocationGlobalRelative:lat=40.230559,lon=29.0091893,alt=9.994
+[08:21:21.480] [DEBUG] (MEDrone):  Local Location: LocationLocal:north=-0.9099242091178894,east=3.3139100074768066,down=-15.844833374023438
+[08:21:21.480] [DEBUG] (MEDrone):  Attitude: Attitude:pitch=-0.07568292319774628,yaw=1.7088521718978882,roll=0.014556467533111572
+[08:21:21.480] [DEBUG] (MEDrone):  Velocity: [-0.06, 0.01, 0.02]
+[08:21:21.480] [DEBUG] (MEDrone):  GPS: GPSInfo:fix=3,num_sat=16
+[08:21:21.480] [DEBUG] (MEDrone):  Gimbal status: Gimbal: pitch=None, roll=None, yaw=None
+[08:21:21.480] [DEBUG] (MEDrone):  Battery: Battery:voltage=21.666,current=32.35,level=66
+[08:21:21.480] [DEBUG] (MEDrone):  EKF OK?: True
+[08:21:21.480] [DEBUG] (MEDrone):  Last Heartbeat: 0.5317398460001641
+[08:21:21.481] [DEBUG] (MEDrone):  Rangefinder: Rangefinder: distance=None, voltage=None
+[08:21:21.481] [DEBUG] (MEDrone):  Rangefinder distance: None
+[08:21:21.481] [DEBUG] (MEDrone):  Rangefinder voltage: None
+[08:21:21.481] [DEBUG] (MEDrone):  Heading: 97
+[08:21:21.481] [DEBUG] (MEDrone):  Is Armable?: True
+[08:21:21.481] [DEBUG] (MEDrone):  System status: STANDBY
+[08:21:21.481] [DEBUG] (MEDrone):  Groundspeed: 0.0769343376159668
+[08:21:21.481] [DEBUG] (MEDrone):  Airspeed: 0.038832977414131165
+[08:21:21.481] [DEBUG] (MEDrone):  Mode: RTL
+[08:21:21.481] [DEBUG] (MEDrone):  Armed: False
+[08:21:21.484] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.87m
+[08:21:22.288] [CRITICAL] (autopilot): Yaw Imbalance 38%
+[08:21:22.485] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.89m
+[08:21:22.587] [DEBUG] (dronekit.mavlink): mav recv error: invalid MAVLink CRC in msgID 0 0x0000 should be 0x1ae1
+[08:21:22.587] [DEBUG] (dronekit.mavlink): mav recv error: invalid MAVLink prefix '0'
+[08:21:23.487] [INFO] (MEDrone): Hedef Noktasına Olan Uzaklık: 23.89m
+[08:21:23.986] [DEBUG] (root): CTRL-C Detected. Mode RTL...

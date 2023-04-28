@@ -221,6 +221,7 @@ def main():
     way_points = get_wp(args.file, LocationGlobalRelative(*drone.location))
     try:
         drone.takeoff(RISE_ALTITUDE)
+        time.sleep(3)
         for wp in way_points:
             point = LocationGlobalRelative(*wp['coordinates'])
             logging.info(f"{wp['coordinates']} Noktasına Gidiliyor...")
